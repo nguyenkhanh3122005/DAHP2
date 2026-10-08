@@ -1,0 +1,87 @@
+@model List<YamahaStoreWeb.Models.DangKyLaiThu>
+@{
+    ViewData["Title"] = "Danh sách Khách hàng Đăng ký Lái thử";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <div>
+            <h3 class="fw-bold text-dark mb-0"><i class="bi bi-people-fill text-success me-2"></i> DANH SÁCH ĐĂNG KÝ LÁI THỬ & TƯ VẤN</h3>
+            <span class="text-muted small">Tiếp nhận thông tin khách hàng, số điện thoại và phân công nhân viên tư vấn bán xe</span>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Về Dashboard
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+            <i class="bi bi-check-circle me-1"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card border-0 shadow-sm rounded-3 p-3 bg-white">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 small">
+                <thead class="table-dark">
+                    <tr class="text-center">
+                        <th style="width: 50px;">Mã</th>
+                        <th class="text-start">Họ tên khách hàng</th>
+                        <th>Số điện thoại</th>
+                        <th>Email</th>
+                        <th>Dòng xe quan tâm</th>
+                        <th class="text-start">Ghi chú</th>
+                        <th>Thời gian gửi</th>
+                        <th>Trạng thái</th>
+                        <th style="width: 150px;">Cập nhật</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        foreach (var dk in Model)
+                        {
+                            <tr>
+                                <td class="text-center fw-bold">#@dk.MaDK</td>
+                                <td><strong class="text-dark">@dk.HoTen</strong></td>
+                                <td class="text-center">
+                                    <a href="tel:@dk.SoDienThoai" class="badge bg-light text-primary border text-decoration-none fs-6">
+                                        <i class="bi bi-telephone-fill me-1"></i> @dk.SoDienThoai
+                                    </a>
+                                </td>
+                                <td>@(string.IsNullOrEmpty(dk.Email) ? "-" : dk.Email)</td>
+                                <td class="text-danger fw-bold">@(dk.XeMay?.TenXe ?? "Xe Yamaha bất kỳ")</td>
+                                <td>@(string.IsNullOrEmpty(dk.GhiChu) ? "-" : dk.GhiChu)</td>
+                                <td class="text-center">@dk.NgayGui.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td class="text-center">
+                                    <span class="badge @(dk.TrangThai == "Hoàn tất" ? "bg-success" : dk.TrangThai == "Đã liên hệ" ? "bg-primary" : "bg-warning text-dark")">
+                                        @dk.TrangThai
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <form asp-action="CapNhatTrangThaiDangKy" method="post" class="d-flex gap-1 justify-content-center">
+                                        <input type="hidden" name="id" value="@dk.MaDK" />
+                                        <select name="trangThai" class="form-select form-select-sm" onchange="this.form.submit()" style="width: 110px;">
+                                            <option value="Chờ xử lý" selected="@(dk.TrangThai == "Chờ xử lý")">Chờ xử lý</option>
+                                            <option value="Đã liên hệ" selected="@(dk.TrangThai == "Đã liên hệ")">Đã liên hệ</option>
+                                            <option value="Hoàn tất" selected="@(dk.TrangThai == "Hoàn tất")">Hoàn tất</option>
+                                        </select>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="9" class="text-center text-muted py-4">Chưa có thông tin khách hàng nào gửi đăng ký.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

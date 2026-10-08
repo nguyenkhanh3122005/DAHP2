@@ -1,0 +1,123 @@
+@model YamahaStoreWeb.Models.DangKyLaiThu
+@{
+    ViewData["Title"] = "Đăng ký lái thử xe máy Yamaha chính hãng";
+    var danhSachXe = ViewBag.DanhSachXe as List<YamahaStoreWeb.Models.XeMay> ?? new List<YamahaStoreWeb.Models.XeMay>();
+    var danhMucs = ViewBag.DanhMucs as List<YamahaStoreWeb.Models.DanhMuc> ?? new List<YamahaStoreWeb.Models.DanhMuc>();
+    var quangCaos = ViewBag.QuangCaoSidebar as List<YamahaStoreWeb.Models.QuangCao> ?? new List<YamahaStoreWeb.Models.QuangCao>();
+    int? maXeChon = ViewBag.MaXeChon as int?;
+}
+
+<div class="container">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+            <li class="breadcrumb-item active">Đăng ký lái thử xe</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <!-- Cột trái: Danh mục & Quảng cáo -->
+        <div class="col-lg-3 col-md-4">
+            <div class="menu-doc-card mb-4 bg-white">
+                <div class="menu-doc-header">
+                    <i class="bi bi-grid-fill me-2"></i> DANH MỤC DÒNG XE
+                </div>
+                <div class="list-group list-group-flush menu-doc-list">
+                    @foreach (var dm in danhMucs)
+                    {
+                        <a asp-controller="XeMay" asp-action="Index" asp-route-maDanhMuc="@dm.MaDanhMuc" 
+                           class="list-group-item list-group-item-action">
+                            <i class="bi @(string.IsNullOrEmpty(dm.Icon) ? "bi-chevron-right" : dm.Icon) me-2 text-danger"></i> @dm.TenDanhMuc
+                        </a>
+                    }
+                </div>
+            </div>
+
+            @if (quangCaos.Any())
+            {
+                <div class="mb-4">
+                    @foreach (var qc in quangCaos)
+                    {
+                        <div class="ad-banner-card mb-3">
+                            <img src="@qc.HinhAnhBanner" alt="@qc.TieuDe" class="img-fluid" 
+                                 onerror="this.src='https://placehold.co/320x180/0b2265/ffffff?text=@Uri.EscapeDataString(qc.TieuDe)';" />
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <!-- Cột phải: Form Đăng ký -->
+        <div class="col-lg-9 col-md-8">
+            <div class="card border-0 shadow-sm rounded-3 p-4 bg-white">
+                <div class="text-center mb-4">
+                    <span class="badge bg-danger rounded-pill px-3 py-2 mb-2">TRẢI NGHIỆM THỰC TẾ CÙNG YAMAHA</span>
+                    <h3 class="fw-bold text-dark">ĐĂNG KÝ LÁI THỬ & NHẬN BÁO GIÁ LĂN BÁNH</h3>
+                    <p class="text-muted small">Quý khách vui lòng điền thông tin bên dưới, nhân viên tư vấn sẽ liên hệ xác nhận lịch hẹn và quà tặng sau 15 phút.</p>
+                </div>
+
+                <form asp-action="GuiDangKy" method="post" class="row g-3">
+                    @Html.AntiForgeryToken()
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small">Họ và tên của bạn <span class="text-danger">*</span></label>
+                        <input asp-for="HoTen" class="form-control" placeholder="Ví dụ: Nguyễn Văn An" required />
+                        <span asp-validation-for="HoTen" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small">Số điện thoại liên hệ <span class="text-danger">*</span></label>
+                        <input asp-for="SoDienThoai" class="form-control" placeholder="Ví dụ: 0912 345 678" required />
+                        <span asp-validation-for="SoDienThoai" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small">Địa chỉ Email (Nhận bảng tính trả góp)</label>
+                        <input asp-for="Email" type="email" class="form-control" placeholder="email@gmail.com" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small">Mẫu xe quan tâm / muốn lái thử <span class="text-danger">*</span></label>
+                        <select asp-for="MaXe" class="form-select" required>
+                            <option value="">-- Chọn dòng xe muốn lái thử --</option>
+                            @foreach (var xe in danhSachXe)
+                            {
+                                <option value="@xe.MaXe" selected="@(maXeChon == xe.MaXe)">@xe.TenXe - @xe.PhanKhoi (@xe.GiaBan.ToString("N0") đ)</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label fw-bold small">Ghi chú hoặc yêu cầu riêng</label>
+                        <textarea asp-for="GhiChu" class="form-control" rows="3" placeholder="Ví dụ: Muốn lái thử vào thứ 7 tuần này, cần tư vấn gói trả góp 0% qua thẻ tín dụng..."></textarea>
+                    </div>
+
+                    <div class="col-12 text-center mt-4">
+                        <button type="submit" class="btn btn-danger btn-lg px-5 fw-bold shadow">
+                            <i class="bi bi-send-fill me-2"></i> GỬI ĐĂNG KÝ NGAY
+                        </button>
+                    </div>
+                </form>
+
+                <div class="row g-3 mt-4 pt-4 border-top text-center small text-secondary">
+                    <div class="col-md-4">
+                        <i class="bi bi-clock-history text-danger fs-4 d-block mb-1"></i>
+                        <strong>Phản hồi siêu tốc</strong>
+                        <div>Tư vấn viên gọi lại trong 15 phút</div>
+                    </div>
+                    <div class="col-md-4">
+                        <i class="bi bi-gift text-primary fs-4 d-block mb-1"></i>
+                        <strong>Quà tặng trải nghiệm</strong>
+                        <div>Nhận ngay nón bảo hiểm chính hãng khi lái thử</div>
+                    </div>
+                    <div class="col-md-4">
+                        <i class="bi bi-shield-check text-success fs-4 d-block mb-1"></i>
+                        <strong>Bảo mật thông tin</strong>
+                        <div>Cam kết bảo mật dữ liệu khách hàng 100%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

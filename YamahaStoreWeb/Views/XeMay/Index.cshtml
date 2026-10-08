@@ -1,0 +1,183 @@
+@model YamahaStoreWeb.ViewModels.XeMayFilterViewModel
+@{
+    ViewData["Title"] = "Danh sách xe máy Yamaha - Tìm kiếm & Phân loại";
+}
+
+<div class="container">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Danh sách dòng xe Yamaha</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <!-- ================= CỘT TRÁI: MENU DỌC & QUẢNG CÁO ================= -->
+        <div class="col-lg-3 col-md-4">
+            <!-- Menu Dọc -->
+            <div class="menu-doc-card mb-4 bg-white">
+                <div class="menu-doc-header d-flex align-items-center">
+                    <i class="bi bi-grid-fill me-2 fs-5"></i>
+                    <span>DANH MỤC DÒNG XE</span>
+                </div>
+                <div class="list-group list-group-flush menu-doc-list">
+                    <a asp-action="Index" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center @(!Model.MaDanhMuc.HasValue ? "active" : "")">
+                        <span><i class="bi bi-asterisk me-2 text-danger"></i> Tất cả các xe</span>
+                    </a>
+                    @foreach (var dm in Model.DanhMucs)
+                    {
+                        <a asp-action="Index" asp-route-maDanhMuc="@dm.MaDanhMuc" 
+                           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center @(Model.MaDanhMuc == dm.MaDanhMuc ? "active" : "")">
+                            <span><i class="bi @(string.IsNullOrEmpty(dm.Icon) ? "bi-chevron-right" : dm.Icon) me-2 text-danger"></i> @dm.TenDanhMuc</span>
+                        </a>
+                    }
+                </div>
+            </div>
+
+            <!-- Hệ thống Quảng cáo Sidebar (Mục 2.d) -->
+            @if (Model.QuangCaoSidebar.Any())
+            {
+                <div class="mb-4">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="small fw-bold text-uppercase text-muted"><i class="bi bi-megaphone-fill text-danger me-1"></i> Ưu đãi đặc biệt</span>
+                    </div>
+                    @foreach (var qc in Model.QuangCaoSidebar)
+                    {
+                        <div class="ad-banner-card mb-3">
+                            <a href="@(string.IsNullOrEmpty(qc.LinkLienKet) ? "/DangKy" : qc.LinkLienKet)">
+                                <img src="@qc.HinhAnhBanner" alt="@qc.TieuDe" class="img-fluid"
+                                     onerror="this.src='https://placehold.co/320x180/0b2265/ffffff?text=@Uri.EscapeDataString(qc.TieuDe)';" />
+                                <span class="ad-badge">QUẢNG CÁO</span>
+                            </a>
+                            <div class="p-2 small fw-bold text-dark text-center bg-white border-top">
+                                @qc.TieuDe
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+
+            <!-- Thống kê truy cập -->
+            <div class="thong-ke-box">
+                <div class="fw-bold text-dark border-bottom pb-2 mb-3">
+                    <i class="bi bi-bar-chart-line-fill text-danger me-2"></i> THỐNG KÊ
+                </div>
+                <div class="thong-ke-item">
+                    <span class="text-secondary">Đang online:</span>
+                    <span class="counter-badge bg-success">@Model.SoNguoiOnline</span>
+                </div>
+                <div class="thong-ke-item">
+                    <span class="text-secondary">Lượt truy cập:</span>
+                    <span class="counter-badge">@Model.TongLuotTruyCap.ToString("N0")</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= CỘT PHẢI: BỘ LỌC & KẾT QUẢ TÌM KIẾM ================= -->
+        <div class="col-lg-9 col-md-8">
+            <!-- Form Lọc Nâng Cao -->
+            <div class="card border-0 shadow-sm rounded-3 mb-4 p-3 bg-white">
+                <form asp-action="Index" method="get" class="row g-2 align-items-center">
+                    <div class="col-lg-4 col-md-6">
+                        <label class="small text-muted fw-bold mb-1">Từ khóa tìm kiếm:</label>
+                        <input type="text" name="keyword" class="form-control form-control-sm" placeholder="Tên xe, màu sắc..." value="@Model.Keyword" />
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <label class="small text-muted fw-bold mb-1">Dòng xe:</label>
+                        <select name="maDanhMuc" class="form-select form-select-sm">
+                            <option value="">-- Tất cả dòng xe --</option>
+                            @foreach (var dm in Model.DanhMucs)
+                            {
+                                <option value="@dm.MaDanhMuc" selected="@(Model.MaDanhMuc == dm.MaDanhMuc)">@dm.TenDanhMuc</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <label class="small text-muted fw-bold mb-1">Mức giá:</label>
+                        <select name="khoangGia" class="form-select form-select-sm">
+                            <option value="">-- Tất cả mức giá --</option>
+                            <option value="duoi-30" selected="@(Model.KhoangGia == "duoi-30")">Dưới 30 triệu</option>
+                            <option value="30-50" selected="@(Model.KhoangGia == "30-50")">Từ 30 - 50 triệu</option>
+                            <option value="tren-50" selected="@(Model.KhoangGia == "tren-50")">Trên 50 triệu</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-2 col-md-6 d-flex align-items-end mt-lg-0 mt-2">
+                        <button type="submit" class="btn btn-danger btn-sm w-100 mt-auto py-2 fw-bold">
+                            <i class="bi bi-funnel me-1"></i> Lọc xe
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Kết quả danh sách xe -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0 text-dark">
+                    Tìm thấy <span class="text-danger">@Model.TongSoLuong</span> sản phẩm
+                    @if (!string.IsNullOrEmpty(Model.Keyword))
+                    {
+                        <span class="text-muted small fw-normal">(cho từ khóa "@Model.Keyword")</span>
+                    }
+                </h5>
+                <a asp-action="Index" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-counterclockwise"></i> Đặt lại bộ lọc</a>
+            </div>
+
+            @if (Model.DanhSachXe.Any())
+            {
+                <div class="row g-3">
+                    @foreach (var xe in Model.DanhSachXe)
+                    {
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <div class="product-card">
+                                @if (xe.IsBanChay)
+                                {
+                                    <span class="badge-banchay"><i class="bi bi-fire"></i> BÁN CHẠY</span>
+                                }
+                                @if (xe.IsMoiVe)
+                                {
+                                    <span class="badge-moive"><i class="bi bi-stars"></i> MỚI</span>
+                                }
+                                <div class="product-img-wrapper">
+                                    <img src="@xe.HinhAnh" alt="@xe.TenXe" 
+                                         onerror="this.src='https://placehold.co/300x200/f1f5f9/0b2265?text=@Uri.EscapeDataString(xe.TenXe)';" />
+                                </div>
+                                <div class="product-body">
+                                    <span class="product-category">@(xe.DanhMuc?.TenDanhMuc ?? "Yamaha Motor")</span>
+                                    <h5 class="product-title" title="@xe.TenXe">
+                                        <a asp-action="ChiTiet" asp-route-slug="@xe.Slug" class="text-decoration-none text-dark">
+                                            @xe.TenXe
+                                        </a>
+                                    </h5>
+                                    <div class="product-specs d-flex justify-content-between">
+                                        <span><i class="bi bi-speedometer2 me-1"></i> @xe.PhanKhoi</span>
+                                        <span><i class="bi bi-palette me-1"></i> @xe.MauSac.Split(',')[0]</span>
+                                    </div>
+                                    <div class="d-flex align-items-baseline mb-3">
+                                        <span class="product-price">@xe.GiaBan.ToString("N0") đ</span>
+                                        @if (xe.GiaKhuyenMai.HasValue && xe.GiaKhuyenMai > 0)
+                                        {
+                                            <span class="product-old-price">@xe.GiaKhuyenMai.Value.ToString("N0") đ</span>
+                                        }
+                                    </div>
+                                    <div class="mt-auto d-flex gap-2">
+                                        <a asp-action="ChiTiet" asp-route-slug="@xe.Slug" class="btn btn-outline-danger btn-sm flex-grow-1">Chi tiết</a>
+                                        <a asp-controller="DangKy" asp-action="Index" asp-route-maXe="@xe.MaXe" class="btn btn-danger btn-sm"><i class="bi bi-calendar-check"></i> Lái thử</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5 bg-white rounded-3 shadow-sm">
+                    <i class="bi bi-search text-muted fs-1 mb-3 d-block"></i>
+                    <h5 class="text-muted">Không tìm thấy mẫu xe nào phù hợp với điều kiện tìm kiếm!</h5>
+                    <p class="small text-muted mb-3">Vui lòng thử lại với tên xe khác hoặc chọn lại mức giá.</p>
+                    <a asp-action="Index" class="btn btn-danger btn-sm">Xem tất cả các mẫu xe</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Yamaha Motor Town Official</title>
+    <!-- Bootstrap CSS & Icons -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <!-- Google Fonts & Fallback -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <!-- 1. TOP HEADER (Hotline, Địa chỉ, Quản trị) -->
+    <div class="top-header bg-dark text-white py-1">
+        <div class="container d-flex flex-wrap justify-content-between align-items-center small">
+            <div>
+                <span class="me-3"><i class="bi bi-geo-alt-fill text-danger me-1"></i> Trường Đại học Công Nghiệp Việt - Hung ( Cơ sở Tây Phương, TP. Hà Nội )</span>
+                <span class="d-none d-md-inline"><i class="bi bi-clock-fill text-warning me-1"></i> Giờ mở cửa: 08:00 - 20:00 (Hàng ngày)</span>
+            </div>
+            <div>
+                <a href="tel:0982801051" class="text-white text-decoration-none me-3 fw-bold">
+                    <i class="bi bi-telephone-fill text-danger me-1"></i> Hotline: <span class="text-warning">0982 801 051</span>
+                </a>
+                <a asp-controller="DangKy" asp-action="Index" class="btn btn-outline-danger btn-sm text-white px-2 py-0 me-2">
+                    <i class="bi bi-calendar-check me-1"></i> Đăng ký lái thử
+                </a>
+                <a asp-controller="Admin" asp-action="Index" class="text-secondary text-decoration-none small">
+                    <i class="bi bi-shield-lock-fill me-1"></i> Quản trị
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. BRAND & SEARCH HEADER -->
+    <div class="main-header bg-white py-3 border-bottom shadow-sm">
+        <div class="container d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <!-- Brand Logo -->
+            <a asp-controller="Home" asp-action="Index" class="navbar-brand d-flex align-items-center text-decoration-none">
+                <div class="logo-box me-2">
+                    <span class="brand-text-yamaha">YAMAHA</span>
+                </div>
+                <div>
+                    <span class="brand-sub fw-bold d-block text-danger">TOWN OFFICIAL</span>
+                    <small class="text-muted fw-semibold" style="font-size: 0.72rem; letter-spacing: 1px;">Revs your Heart</small>
+                </div>
+            </a>
+
+            <!-- Search Bar (Mục 2.a: Tìm kiếm thông tin) -->
+            <div class="search-box flex-grow-1 mx-lg-4" style="max-width: 520px;">
+                <form asp-controller="XeMay" asp-action="Index" method="get" class="d-flex position-relative">
+                    <input type="text" name="keyword" class="form-control rounded-pill ps-4 pe-5 border-danger border-2" 
+                           placeholder="Tìm xe: Exciter, Grande, NVX, Sirius, 155cc..." value="@ViewContext.HttpContext.Request.Query["keyword"]" />
+                    <button class="btn btn-danger rounded-circle position-absolute end-0 top-0 mt-1 me-1 d-flex align-items-center justify-content-center" 
+                            type="submit" style="width: 32px; height: 32px;" title="Tìm kiếm">
+                        <i class="bi bi-search" style="font-size: 0.85rem;"></i>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Quick Action Badges -->
+            <div class="d-flex align-items-center gap-3">
+                <div class="d-flex align-items-center">
+                    <div class="icon-circle bg-danger text-white me-2"><i class="bi bi-shield-check"></i></div>
+                    <div class="small lh-1">
+                        <div class="fw-bold text-dark">Bảo hành 3 năm</div>
+                        <small class="text-muted">Hoặc 30.000 km</small>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center d-none d-lg-flex">
+                    <div class="icon-circle bg-primary text-white me-2"><i class="bi bi-percent"></i></div>
+                    <div class="small lh-1">
+                        <div class="fw-bold text-dark">Trả góp 0%</div>
+                        <small class="text-muted">Thủ tục nhanh 15p</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. MENU NGANG (Yêu cầu mục 2.b: Quản lý trang thông tin) -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-yamaha-blue sticky-top p-0 shadow">
+        <div class="container">
+            <button class="navbar-toggler my-2" type="button" data-bs-toggle="collapse" data-bs-target="#navMenuNgang">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenuNgang">
+                <ul class="navbar-nav me-auto fw-bold text-uppercase menu-ngang-list">
+                    <li class="nav-item">
+                        <a class="nav-link px-3 @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" && ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")" 
+                           asp-controller="Home" asp-action="Index">
+                            <i class="bi bi-house-door-fill me-1"></i> Trang chủ
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 @(ViewContext.RouteData.Values["action"]?.ToString() == "GioiThieu" ? "active" : "")" 
+                           asp-controller="Home" asp-action="GioiThieu">
+                            <i class="bi bi-info-circle me-1"></i> Giới thiệu
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 @(ViewContext.RouteData.Values["controller"]?.ToString() == "XeMay" ? "active" : "")" 
+                           asp-controller="XeMay" asp-action="Index">
+                            <i class="bi bi-speedometer2 me-1"></i> Toàn bộ dòng xe
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 @(ViewContext.RouteData.Values["action"]?.ToString() == "BangGia" ? "active" : "")" 
+                           asp-controller="Home" asp-action="BangGia">
+                            <i class="bi bi-tags-fill me-1"></i> Bảng giá xe 2025
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 @(ViewContext.RouteData.Values["controller"]?.ToString() == "TinTuc" ? "active" : "")" 
+                           asp-controller="TinTuc" asp-action="Index">
+                            <i class="bi bi-newspaper me-1"></i> Tin tức & Khuyến mãi
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 @(ViewContext.RouteData.Values["controller"]?.ToString() == "DangKy" ? "active" : "")" 
+                           asp-controller="DangKy" asp-action="Index">
+                            <i class="bi bi-ui-checks me-1"></i> Đăng ký lái thử
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 @(ViewContext.RouteData.Values["action"]?.ToString() == "LienHe" ? "active" : "")" 
+                           asp-controller="Home" asp-action="LienHe">
+                            <i class="bi bi-geo-alt me-1"></i> Liên hệ Showroom
+                        </a>
+                    </li>
+                </ul>
+                <div class="d-none d-lg-block text-white small fw-normal py-2">
+                    <span class="badge bg-danger rounded-pill px-3 py-2"><i class="bi bi-award-fill me-1"></i> ĐỒ ÁN HỌC PHẦN 2 - ĐỀ 04</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 4. THÔNG BÁO FLASH MESSAGE -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="container mt-3">
+            <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+                <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+                <strong>Thành công!</strong> @TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    }
+
+    <!-- 5. MAIN CONTENT -->
+    <div class="main-body py-4 bg-light">
+        @RenderBody()
+    </div>
+
+    <!-- 6. FOOTER -->
+    <footer class="footer bg-dark text-white pt-5 pb-3">
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="brand-text-yamaha me-2 fs-3 text-white">YAMAHA</span>
+                        <span class="badge bg-danger">TOWN VIỆT-HUNG</span>
+                    </div>
+                    <p class="text-secondary small">
+                        Đại lý ủy quyền 3S chính hãng của Công ty TNHH Yamaha Motor Việt Nam. Chuyên phân phối các dòng xe máy, phụ tùng chính hãng và dịch vụ bảo hành tiêu chuẩn Nhật Bản.
+                    </p>
+                    <div class="text-secondary small">
+                        <p class="mb-1"><i class="bi bi-geo-alt text-danger me-2"></i> Trường Đại học Công Nghiệp Việt - Hung ( Cơ sở Tây Phương, TP. Hà Nội )</p>
+                        <p class="mb-1"><i class="bi bi-telephone text-danger me-2"></i> Hotline & Tư vấn: <a href="tel:0982801051" class="text-warning fw-bold text-decoration-none">0982 801 051</a></p>
+                        <p class="mb-1"><i class="bi bi-envelope text-danger me-2"></i> Email: <a href="mailto:nguyenkhanh141225@gmail.com" class="text-light text-decoration-none">nguyenkhanh141225@gmail.com</a></p>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="text-white fw-bold mb-3 border-bottom border-danger pb-2">DÒNG XE NỔI BẬT</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a asp-controller="XeMay" asp-action="ChiTiet" asp-route-id="yamaha-exciter-155-vva-abs" class="text-secondary text-decoration-none hover-white">Yamaha Exciter 155 VVA</a></li>
+                        <li class="mb-2"><a asp-controller="XeMay" asp-action="ChiTiet" asp-route-id="yamaha-grande-blue-core-hybrid" class="text-secondary text-decoration-none hover-white">Yamaha Grande Hybrid</a></li>
+                        <li class="mb-2"><a asp-controller="XeMay" asp-action="ChiTiet" asp-route-id="yamaha-nvx-155-vva" class="text-secondary text-decoration-none hover-white">Yamaha NVX 155 VVA</a></li>
+                        <li class="mb-2"><a asp-controller="XeMay" asp-action="ChiTiet" asp-route-id="yamaha-sirius-fi" class="text-secondary text-decoration-none hover-white">Yamaha Sirius FI</a></li>
+                        <li class="mb-2"><a asp-controller="XeMay" asp-action="ChiTiet" asp-route-id="yamaha-neos-electric" class="text-secondary text-decoration-none hover-white">Xe máy điện NEO'S</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="text-white fw-bold mb-3 border-bottom border-danger pb-2">CHÍNH SÁCH & HỖ TRỢ</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a asp-controller="DangKy" asp-action="Index" class="text-secondary text-decoration-none hover-white">Đăng ký lái thử trải nghiệm</a></li>
+                        <li class="mb-2"><a asp-controller="Home" asp-action="BangGia" class="text-secondary text-decoration-none hover-white">Bảng giá xe lăn bánh 2025</a></li>
+                        <li class="mb-2"><a href="#" class="text-secondary text-decoration-none hover-white">Chính sách bảo hành 3 năm</a></li>
+                        <li class="mb-2"><a href="#" class="text-secondary text-decoration-none hover-white">Hỗ trợ mua xe trả góp 0%</a></li>
+                        <li class="mb-2"><a href="#" class="text-secondary text-decoration-none hover-white">Quy trình giao xe tận nơi</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="text-white fw-bold mb-3 border-bottom border-danger pb-2">THÔNG TIN ĐỒ ÁN</h6>
+                    <div class="card bg-secondary bg-opacity-25 border-0 p-3 small">
+                        <p class="mb-1 text-white fw-bold">ĐỒ ÁN HỌC PHẦN 2 - ĐỀ SỐ 04</p>
+                        <p class="mb-1 text-light">Xây dựng website kinh doanh xe máy Yamaha</p>
+                        <hr class="border-secondary my-2" />
+                        <p class="mb-1 text-light"><strong>Khoa:</strong> Công nghệ Thông tin</p>
+                        <p class="mb-1 text-light"><strong>Trường:</strong> ĐH Công nghiệp Việt-Hung</p>
+                        <p class="mb-0 text-warning"><strong>Hotline:</strong> 0982 801 051</p>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-secondary opacity-25 my-3" />
+            <div class="d-flex flex-wrap justify-content-between align-items-center small text-secondary">
+                <div>&copy; 2026 Yamaha Motor Store - Đồ án tốt nghiệp / Học phần 2 CNTT Việt-Hung.</div>
+                <div>Thiết kế giao diện CSS/Bootstrap & Lập trình ASP.NET Core C# + SQL Server.</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

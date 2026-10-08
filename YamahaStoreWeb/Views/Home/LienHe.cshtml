@@ -1,0 +1,86 @@
+@{
+    ViewData["Title"] = "Liên hệ Showroom Đại lý Yamaha Town Việt-Hung";
+}
+
+<div class="container">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+            <li class="breadcrumb-item active">Liên hệ</li>
+        </ol>
+    </nav>
+
+    <div class="card border-0 shadow-sm rounded-3 p-4 bg-white mb-4">
+        <div class="row g-4">
+            <div class="col-lg-5">
+                <span class="badge bg-danger mb-2">HỆ THỐNG PHÂN PHỐI CHÍNH HÃNG</span>
+                <h3 class="fw-bold text-dark mb-3">LIÊN HỆ VỚI CHÚNG TÔI</h3>
+                <p class="text-secondary small mb-4">
+                    Quý khách có bất kỳ thắc mắc hoặc nhu cầu mua xe, đặt lịch bảo dưỡng, xin vui lòng liên hệ theo thông tin bên dưới hoặc gửi tin nhắn trực tiếp.
+                </p>
+
+                <div class="d-flex align-items-start mb-3">
+                    <div class="icon-circle bg-danger text-white me-3 mt-1"><i class="bi bi-geo-alt"></i></div>
+                    <div>
+                        <strong class="d-block text-dark">Địa chỉ Showroom:</strong>
+                        <span class="text-secondary small">Trường Đại học Công Nghiệp Việt - Hung ( Cơ sở Tây Phương, TP. Hà Nội )</span>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-start mb-3">
+                    <div class="icon-circle bg-primary text-white me-3 mt-1"><i class="bi bi-telephone"></i></div>
+                    <div>
+                        <strong class="d-block text-dark">Hotline & Tư vấn bán hàng:</strong>
+                        <a href="tel:0982801051" class="text-danger fw-bold text-decoration-none fs-5">0982 801 051</a>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-start mb-3">
+                    <div class="icon-circle bg-success text-white me-3 mt-1"><i class="bi bi-envelope"></i></div>
+                    <div>
+                        <strong class="d-block text-dark">Hòm thư điện tử (Email):</strong>
+                        <a href="mailto:nguyenkhanh141225@gmail.com" class="text-primary fw-bold text-decoration-none">nguyenkhanh141225@gmail.com</a>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-start mb-3">
+                    <div class="icon-circle bg-warning text-dark me-3 mt-1"><i class="bi bi-clock"></i></div>
+                    <div>
+                        <strong class="d-block text-dark">Thời gian phục vụ:</strong>
+                        <span class="text-secondary small">Thứ 2 - Chủ Nhật: 08:00 - 20:00 (Kể cả ngày lễ)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="p-4 bg-light rounded-3 border">
+                    <h5 class="fw-bold text-dark mb-3"><i class="bi bi-chat-dots-fill text-danger me-2"></i> GỬI YÊU CẦU TƯ VẤN NHANH</h5>
+                    <form asp-controller="DangKy" asp-action="GuiDangKy" method="post" class="row g-3">
+                        @Html.AntiForgeryToken()
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Họ và tên *</label>
+                            <input name="HoTen" class="form-control" placeholder="Họ và tên..." required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Số điện thoại *</label>
+                            <input name="SoDienThoai" class="form-control" placeholder="Số điện thoại..." required />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-bold">Email</label>
+                            <input name="Email" type="email" class="form-control" placeholder="nguyenkhanh141225@gmail.com" />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-bold">Nội dung liên hệ</label>
+                            <textarea name="GhiChu" class="form-control" rows="4" placeholder="Nhập câu hỏi hoặc nội dung bạn cần hỗ trợ..."></textarea>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-danger fw-bold px-4 py-2">
+                                <i class="bi bi-send me-1"></i> Gửi tin nhắn ngay
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

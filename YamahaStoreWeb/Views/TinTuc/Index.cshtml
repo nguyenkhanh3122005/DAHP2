@@ -1,0 +1,85 @@
+@model List<YamahaStoreWeb.Models.TinTuc>
+@{
+    ViewData["Title"] = "Tin tức & Sự kiện khuyến mãi xe Yamaha";
+    var danhMucs = ViewBag.DanhMucs as List<YamahaStoreWeb.Models.DanhMuc> ?? new List<YamahaStoreWeb.Models.DanhMuc>();
+    var quangCaos = ViewBag.QuangCaoSidebar as List<YamahaStoreWeb.Models.QuangCao> ?? new List<YamahaStoreWeb.Models.QuangCao>();
+}
+
+<div class="container">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+            <li class="breadcrumb-item active">Tin tức & Khuyến mãi</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <!-- Cột trái: Menu dọc & Quảng cáo -->
+        <div class="col-lg-3 col-md-4">
+            <div class="menu-doc-card mb-4 bg-white">
+                <div class="menu-doc-header">
+                    <i class="bi bi-grid-fill me-2"></i> DANH MỤC DÒNG XE
+                </div>
+                <div class="list-group list-group-flush menu-doc-list">
+                    @foreach (var dm in danhMucs)
+                    {
+                        <a asp-controller="XeMay" asp-action="Index" asp-route-maDanhMuc="@dm.MaDanhMuc" 
+                           class="list-group-item list-group-item-action">
+                            <i class="bi @(string.IsNullOrEmpty(dm.Icon) ? "bi-chevron-right" : dm.Icon) me-2 text-danger"></i> @dm.TenDanhMuc
+                        </a>
+                    }
+                </div>
+            </div>
+
+            @if (quangCaos.Any())
+            {
+                <div class="mb-4">
+                    @foreach (var qc in quangCaos)
+                    {
+                        <div class="ad-banner-card mb-3">
+                            <img src="@qc.HinhAnhBanner" alt="@qc.TieuDe" class="img-fluid"
+                                 onerror="this.src='https://placehold.co/320x180/0b2265/ffffff?text=@Uri.EscapeDataString(qc.TieuDe)';" />
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <!-- Cột phải: Danh sách tin tức -->
+        <div class="col-lg-9 col-md-8">
+            <div class="card border-0 shadow-sm rounded-3 p-4 bg-white">
+                <h4 class="fw-bold text-dark border-bottom pb-2 mb-4">
+                    <i class="bi bi-newspaper text-danger me-2"></i> TIN TỨC & CHƯƠNG TRÌNH KHUYẾN MÃI
+                </h4>
+
+                <div class="row g-4">
+                    @foreach (var tin in Model)
+                    {
+                        <div class="col-12">
+                            <div class="card border-0 bg-light rounded-3 overflow-hidden p-3">
+                                <div class="row g-3 align-items-center">
+                                    <div class="col-md-4">
+                                        <img src="@tin.HinhAnh" class="img-fluid rounded-3 w-100" alt="@tin.TieuDe" style="height: 160px; object-fit: cover;"
+                                             onerror="this.src='https://placehold.co/400x250/0b2265/ffffff?text=Tin+Tuc';" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <small class="text-muted"><i class="bi bi-calendar3 me-1"></i> @tin.NgayDang.ToString("dd/MM/yyyy HH:mm")</small>
+                                        <h5 class="fw-bold mt-1 mb-2">
+                                            <a asp-action="ChiTiet" asp-route-slug="@tin.Slug" class="text-dark text-decoration-none">
+                                                @tin.TieuDe
+                                            </a>
+                                        </h5>
+                                        <p class="small text-secondary mb-3">@tin.TomTat</p>
+                                        <a asp-action="ChiTiet" asp-route-slug="@tin.Slug" class="btn btn-outline-danger btn-sm">
+                                            Xem chi tiết bài viết <i class="bi bi-arrow-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

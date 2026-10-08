@@ -1,0 +1,69 @@
+@model YamahaStoreWeb.Models.QuangCao
+@{
+    ViewData["Title"] = "Chỉnh sửa Banner Quảng Cáo";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <div>
+            <h3 class="fw-bold text-dark mb-0"><i class="bi bi-pencil-square text-primary me-2"></i> CHỈNH SỬA BANNER QUẢNG CÁO</h3>
+            <span class="text-danger fw-bold small">MỤC 2.d - HỆ THỐNG QUẢNG CÁO ĐI KÈM</span>
+        </div>
+        <a asp-action="QuangCao" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Quay lại
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-3 p-4 bg-white">
+        <form asp-action="SuaQuangCao" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="MaQC" />
+
+            <div class="row g-3">
+                <div class="col-md-12">
+                    <label class="form-label fw-bold small">Tiêu đề chiến dịch quảng cáo <span class="text-danger">*</span></label>
+                    <input asp-for="TieuDe" class="form-control" required />
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold small">Đường dẫn hình ảnh Banner <span class="text-danger">*</span></label>
+                    <input asp-for="HinhAnhBanner" class="form-control" required />
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold small">Link liên kết khi click vào banner</label>
+                    <input asp-for="LinkLienKet" class="form-control" />
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold small">Vị trí hiển thị trên website <span class="text-danger">*</span></label>
+                    <select asp-for="ViTri" class="form-select" required>
+                        <option value="Sidebar" selected="@(Model.ViTri == "Sidebar")">Cột bên trái (Sidebar Menu dọc)</option>
+                        <option value="MidBanner" selected="@(Model.ViTri == "MidBanner")">Khu vực giữa trang chủ (MidBanner)</option>
+                        <option value="TopBanner" selected="@(Model.ViTri == "TopBanner")">Đầu trang (TopBanner)</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label fw-bold small">Thứ tự ưu tiên hiển thị</label>
+                    <input asp-for="ThuTu" type="number" class="form-control" />
+                </div>
+
+                <div class="col-md-3 d-flex align-items-center">
+                    <div class="form-check form-switch mt-4">
+                        <input class="form-check-input" type="checkbox" asp-for="HienThi" id="switchHienThi">
+                        <label class="form-check-label fw-bold" for="switchHienThi">Bật hiển thị</label>
+                    </div>
+                </div>
+
+                <div class="col-12 text-end mt-4">
+                    <a asp-action="QuangCao" class="btn btn-secondary me-2">Hủy bỏ</a>
+                    <button type="submit" class="btn btn-primary fw-bold px-4">
+                        <i class="bi bi-save me-1"></i> Lưu thay đổi
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

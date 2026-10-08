@@ -1,0 +1,94 @@
+@model List<YamahaStoreWeb.Models.QuangCao>
+@{
+    ViewData["Title"] = "Quản lý Hệ thống Quảng cáo Đi Kèm (Mục 2.d - Điểm Giỏi)";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <div>
+            <h3 class="fw-bold text-dark mb-0"><i class="bi bi-badge-ad-fill text-primary me-2"></i> QUẢN LÝ HỆ THỐNG QUẢNG CÁO ĐI KÈM</h3>
+            <span class="text-danger fw-bold small"><i class="bi bi-award-fill me-1"></i> TIÊU CHÍ ĐÁNH GIÁ ĐẠT ĐIỂM GIỎI (MỤC 2.d)</span>
+            <div class="text-muted small">Cấu hình banner khuyến mãi, banner trả góp, ưu đãi hiển thị tại thanh bên Sidebar hoặc giữa trang</div>
+        </div>
+        <div>
+            <a asp-action="ThemQuangCao" class="btn btn-primary fw-bold btn-sm">
+                <i class="bi bi-plus-circle me-1"></i> Thêm banner mới
+            </a>
+            <a asp-action="Index" class="btn btn-outline-secondary btn-sm ms-2">
+                <i class="bi bi-arrow-left"></i> Về Dashboard
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+            <i class="bi bi-check-circle me-1"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card border-0 shadow-sm rounded-3 p-3 bg-white">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 small">
+                <thead class="table-dark">
+                    <tr class="text-center">
+                        <th style="width: 50px;">Mã</th>
+                        <th style="width: 140px;">Hình ảnh Banner</th>
+                        <th class="text-start">Tiêu đề chiến dịch quảng cáo</th>
+                        <th>Vị trí hiển thị</th>
+                        <th>Link điều hướng</th>
+                        <th>Thứ tự</th>
+                        <th>Trạng thái</th>
+                        <th style="width: 120px;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var qc in Model)
+                    {
+                        <tr>
+                            <td class="text-center fw-bold">#@qc.MaQC</td>
+                            <td class="text-center">
+                                <img src="@qc.HinhAnhBanner" alt="@qc.TieuDe" style="width: 120px; height: 50px; object-fit: cover; border-radius: 4px;"
+                                     onerror="this.src='https://placehold.co/120x50/0b2265/ffffff?text=Banner';" />
+                            </td>
+                            <td>
+                                <strong class="text-dark">@qc.TieuDe</strong>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge @(qc.ViTri == "Sidebar" ? "bg-info text-dark" : "bg-warning text-dark")">
+                                    @(qc.ViTri == "Sidebar" ? "Cột bên (Sidebar)" : "Giữa trang (MidBanner)")
+                                </span>
+                            </td>
+                            <td class="small text-muted text-break">@(string.IsNullOrEmpty(qc.LinkLienKet) ? "-" : qc.LinkLienKet)</td>
+                            <td class="text-center fw-bold">@qc.ThuTu</td>
+                            <td class="text-center">
+                                @if (qc.HienThi)
+                                {
+                                    <span class="badge bg-success"><i class="bi bi-check2"></i> Đang hiển thị</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Tạm ẩn</span>
+                                }
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm">
+                                    <a asp-action="SuaQuangCao" asp-route-id="@qc.MaQC" class="btn btn-outline-primary" title="Sửa">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <form asp-action="XoaQuangCao" asp-route-id="@qc.MaQC" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc muốn xóa banner này?');">
+                                        <button type="submit" class="btn btn-outline-danger" title="Xóa">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,93 @@
+@model List<YamahaStoreWeb.Models.XeMay>
+@{
+    ViewData["Title"] = "Quản lý Sản phẩm Xe Máy Yamaha";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <div>
+            <h3 class="fw-bold text-dark mb-0"><i class="bi bi-bicycle text-danger me-2"></i> QUẢN LÝ SẢN PHẨM XE MÁY YAMAHA</h3>
+            <span class="text-muted small">Quản lý kho xe, cập nhật giá bán, thông số kỹ thuật và thiết lập <strong>Sản phẩm bán chạy (Mục 2.c)</strong></span>
+        </div>
+        <div>
+            <a asp-action="ThemXe" class="btn btn-danger fw-bold btn-sm">
+                <i class="bi bi-plus-circle me-1"></i> Thêm xe máy mới
+            </a>
+            <a asp-action="Index" class="btn btn-outline-secondary btn-sm ms-2">
+                <i class="bi bi-arrow-left"></i> Về Dashboard
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+            <i class="bi bi-check-circle me-1"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card border-0 shadow-sm rounded-3 p-3 bg-white">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 small">
+                <thead class="table-dark">
+                    <tr class="text-center">
+                        <th style="width: 50px;">Mã</th>
+                        <th style="width: 70px;">Hình ảnh</th>
+                        <th class="text-start">Tên xe & Dòng xe</th>
+                        <th>Phân khối</th>
+                        <th>Giá bán (VNĐ)</th>
+                        <th>Bán chạy (2.c)</th>
+                        <th>Lượt xem</th>
+                        <th style="width: 140px;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var xe in Model)
+                    {
+                        <tr>
+                            <td class="text-center fw-bold">#@xe.MaXe</td>
+                            <td class="text-center">
+                                <img src="@xe.HinhAnh" alt="@xe.TenXe" style="width: 50px; height: 35px; object-fit: contain;" 
+                                     onerror="this.src='https://placehold.co/50x35/f8f9fa/0b2265?text=Xe';" />
+                            </td>
+                            <td>
+                                <strong class="text-dark">@xe.TenXe</strong>
+                                <div class="text-muted small">Dòng: <span class="badge bg-light text-dark border">@(xe.DanhMuc?.TenDanhMuc ?? "-")</span> | Màu: @xe.MauSac</div>
+                            </td>
+                            <td class="text-center"><span class="badge bg-light text-dark border">@xe.PhanKhoi</span></td>
+                            <td class="text-danger fw-bold text-end">@xe.GiaBan.ToString("N0") đ</td>
+                            <td class="text-center">
+                                @if (xe.IsBanChay)
+                                {
+                                    <span class="badge bg-danger"><i class="bi bi-fire me-1"></i> Bán chạy</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-light text-muted border">Bình thường</span>
+                                }
+                            </td>
+                            <td class="text-center">@xe.LuotXem</td>
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm">
+                                    <a asp-action="SuaXe" asp-route-id="@xe.MaXe" class="btn btn-outline-primary" title="Chỉnh sửa">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <form asp-action="XoaXe" asp-route-id="@xe.MaXe" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc muốn xóa xe này?');">
+                                        <button type="submit" class="btn btn-outline-danger" title="Xóa">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                    <a asp-controller="XeMay" asp-action="ChiTiet" asp-route-slug="@xe.Slug" target="_blank" class="btn btn-outline-secondary" title="Xem trên web">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

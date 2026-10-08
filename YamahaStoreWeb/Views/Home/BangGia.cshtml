@@ -1,0 +1,86 @@
+@model List<YamahaStoreWeb.Models.DanhMuc>
+@{
+    ViewData["Title"] = "Bảng giá xe máy Yamaha 2025 cập nhật mới nhất";
+}
+
+<div class="container">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+            <li class="breadcrumb-item active">Bảng giá xe Yamaha 2025</li>
+        </ol>
+    </nav>
+
+    <div class="card border-0 shadow-sm rounded-3 p-4 bg-white mb-4">
+        <div class="text-center mb-4">
+            <span class="badge bg-danger mb-2">CẬP NHẬT CHÍNH HÃNG NĂM 2025</span>
+            <h2 class="fw-bold text-dark">BẢNG GIÁ XE MÁY YAMAHA TẠI VIỆT NAM</h2>
+            <p class="text-muted small">Giá bán lẻ đề xuất đã bao gồm thuế VAT (10%), chưa bao gồm lệ phí trước bạ và phí đăng ký biển số.</p>
+        </div>
+
+        @foreach (var dm in Model)
+        {
+            <div class="mb-5">
+                <h4 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                    <i class="bi bi-tag-fill text-danger me-2"></i> DÒNG @dm.TenDanhMuc.ToUpper()
+                </h4>
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered align-middle">
+                        <thead class="table-dark">
+                            <tr class="text-center small">
+                                <th style="width: 80px;">Hình ảnh</th>
+                                <th>Tên xe & Phiên bản</th>
+                                <th>Phân khối</th>
+                                <th>Màu sắc có sẵn</th>
+                                <th>Giá đề xuất (VNĐ)</th>
+                                <th>Tình trạng</th>
+                                <th style="width: 140px;">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (dm.XeMays != null && dm.XeMays.Any())
+                            {
+                                foreach (var xe in dm.XeMays)
+                                {
+                                    <tr>
+                                        <td class="text-center p-2">
+                                            <img src="@xe.HinhAnh" alt="@xe.TenXe" style="height: 50px; object-fit: contain;"
+                                                 onerror="this.src='https://placehold.co/80x50/f8f9fa/0b2265?text=Xe';" />
+                                        </td>
+                                        <td>
+                                            <a asp-controller="XeMay" asp-action="ChiTiet" asp-route-slug="@xe.Slug" class="fw-bold text-decoration-none text-dark">
+                                                @xe.TenXe
+                                            </a>
+                                            @if (xe.IsBanChay)
+                                            {
+                                                <span class="badge bg-danger ms-1">Bán chạy</span>
+                                            }
+                                        </td>
+                                        <td class="text-center"><span class="badge bg-light text-dark border">@xe.PhanKhoi</span></td>
+                                        <td class="small text-muted">@xe.MauSac</td>
+                                        <td class="fw-bold text-danger text-end">@xe.GiaBan.ToString("N0") đ</td>
+                                        <td class="text-center">
+                                            <span class="badge bg-success bg-opacity-75">Còn hàng</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <a asp-controller="DangKy" asp-action="Index" asp-route-maXe="@xe.MaXe" class="btn btn-outline-danger btn-sm py-1 px-2">
+                                                Lái thử <i class="bi bi-chevron-right"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted py-3">Đang cập nhật thêm phiên bản cho dòng xe này.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    </div>
+</div>
